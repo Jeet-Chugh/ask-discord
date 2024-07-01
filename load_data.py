@@ -1,12 +1,8 @@
 import json
-import os
-
 import pandas as pd
 import numpy as np
-from openai import OpenAI
 import tiktoken
 from pymilvus import (
-    connections,
     utility,
     FieldSchema,
     CollectionSchema,
@@ -37,7 +33,7 @@ class LoadData:
         if self.collection_exists():
             return
         self.createCollection()
-        df = self.load_json().head(2000)
+        df = self.load_json()
         self.insert_data(df)
 
     def collection_exists(self) -> bool:
@@ -54,6 +50,7 @@ class LoadData:
             & (df["content"].str.len() > self.MIN_MESSAGE_LENGTH)
             & (df["content"].str.len() < self.MAX_MESSAGE_LENGTH)
             & ~(df["content"].str.startswith("http"))
+            & ~(df["content"].str.endswith("?"))
         ]
         df = df.rename(columns={"author.id": "authorId", "author.name": "authorName"})
         RELEVANT_COLUMNS = ["id", "timestamp", "content", "authorId", "authorName"]

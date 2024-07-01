@@ -12,7 +12,7 @@ class Chatbot:
     def __init__(self, configs) -> None:
         self.client = configs["OPENAI_CLIENT"]
         self.MAX_SIMILAR_EXAMPLES = configs.get("MAX_SIMILAR_EXAMPLES", 10)
-        self.SIMILARITY_SCORE_CUTOFF = configs.get("SIMILARITY_SCORE_CUTOFF", 0.20)
+        self.SIMILARITY_SCORE_CUTOFF = configs.get("SIMILARITY_SCORE_CUTOFF", 0.0)
         self.CHAT_MODEL = configs.get("CHAT_MODEL", "gpt-4o")
         self.COLLECTION_NAME = configs.get("COLLECTION_NAME", "channel")
         self.EMBEDDING_MODEL = configs.get("EMBEDDING_MODEL", "text-embedding-3-small")
@@ -40,11 +40,11 @@ class Chatbot:
         res = []
         for result in results:
             res.append([
-            f"Similarity: {result['distance'] * 100:.2f}%",
-            f"Timestamp: {result['timestamp']}",
-            f"Author: {result['authorName']}",
-            f"Message: {result['content']}",
-            f"ID: {result['id']}"
+            f"Similarity: {result["distance"] * 100:.2f}%",
+            f"Timestamp: {result["timestamp"]}",
+            f"Author: {result["authorName"]}",
+            f"Message: {result["content"]}",
+            f"ID: {result["id"]}"
         ])
         return res
 
@@ -65,13 +65,14 @@ class Chatbot:
         )
         results = []
         for row in top_k[0]:
-            results.append(
-                {
-                    "distance": row.distance,
-                    "id": row.id,
-                    "content": row.content,
-                    "timestamp": row.timestamp,
-                    "authorName": row.authorName,
-                }
-            )
+            if row.distance > self.SIMILARITY_SCORE_CUTOFF:
+                results.append(
+                    {
+                        "distance": row.distance,
+                        "id": row.id,
+                        "content": row.content,
+                        "timestamp": row.timestamp,
+                        "authorName": row.authorName,
+                    }
+                )
         return results

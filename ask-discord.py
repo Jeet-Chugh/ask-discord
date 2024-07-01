@@ -13,13 +13,13 @@ configs = {
     "OPENAI_CLIENT": client,
     "CHAT_MODEL": "gpt-4o",
     "EMBEDDING_MODEL": "text-embedding-3-small",
-    "JSON_DATA_PATH": "/Users/sunjeetchugh/Documents/ask-discord/data/data.json",
+    "JSON_DATA_PATH": "data/data.json",
     "EMBEDDING_DIMENSIONS": 512,
     "MAX_MESSAGE_LENGTH": 5000,
     "MIN_MESSAGE_LENGTH": 50,
     "COLLECTION_NAME": "channel",
     "MAX_SIMILAR_EXAMPLES": 10,
-    "SIMILARITY_SCORE_CUTOFF": 0.2,
+    "SIMILARITY_SCORE_CUTOFF": 0.5,
 }
 
 connections.connect("default", host="localhost", port="19530")
