@@ -6,3 +6,6 @@ __pycache__/
 
 # Milvus
 milvus/volumes
+
+# Data
+data/
