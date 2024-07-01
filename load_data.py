@@ -22,22 +22,18 @@ class LoadData():
         self.JSON_DATA_PATH = configs.get("JSON_DATA_PATH", "/data/data.json")
         self.EMBEDDING_MODEL = configs.get("EMBEDDING_MODEL", "text-embedding-3-small")
         self.EMBEDDING_DIMENSIONS = configs.get("EMBEDDING_DIMENSIONS", 512)
-        self.MAX_SIMILAR_EXAMPLES = configs.get("MAX_SIMILAR_EXAMPLES", 10)
-        self.SIMILARITY_SCORE_CUTOFF = configs.get("SIMILARITY_SCORE_CUTOFF", 0.80)
         self.MAX_MESSAGE_LENGTH = configs.get("MAX_MESSAGE_LENGTH", 5000)
         self.MIN_MESSAGE_LENGTH = configs.get("MIN_MESSAGE_LENGTH", 50)
         self.COLLECTION_NAME = configs.get("COLLECTION_NAME", "channel")
         self.collection = None
         
-        # Milvus connetion
-        connections.connect("default", host="localhost", port="19530")
         self.load_data()
 
     def load_data(self) -> None:
         if self.collection_exists():
             return
         self.createCollection()
-        df = self.load_json().head(1000)
+        df = self.load_json().head(2000)
         self.insert_data(df)
 
     def collection_exists(self) -> bool:
